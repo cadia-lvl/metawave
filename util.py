@@ -4,6 +4,7 @@ import crepe
 import librosa
 import numpy as np
 import pyworld as pw
+import matplotlib.pyplot as plt
 
 
 def prep_wav(path, sr):
@@ -44,8 +45,13 @@ def speech_rate(audio, text):
         that the rate will be over-estimated in single sentence utterances
         with no pauses.
     '''
-    duration = librosa.get_duration(audio)
-    return naive_syllable_count(text) / duration
+    return naive_syllable_count(text) / get_duration(audio)
+
+def get_duration(audio):
+    '''
+        Returns the duration in seconds of the given audio
+    '''
+    return librosa.get_duration(audio)
 
 def zero_xing_F0(audio):
     '''
@@ -75,16 +81,20 @@ def crepe_F0(audio, sr, confidence_threshold=0.0, frame_length=10):
             num_used += 1
     return f/num_used, time, frequency, confidence
 
-def dio_FO(audio, sr, exclude_silence=True):
+def dio_F0(audio, sr, exclude_silence=True):
     '''
         Uses the Distributed Inline-filter Operation adapted from
-        the World package.
+        the World package to estimate F0 on 5ms frames.
 
         If exclude_silence is set to True, 0 Hz values are excluded
         in the F0 average calculation
     '''
     _F0, t = pw.dio(audio, sr)
     F0 = pw.stonemask(audio, _F0, t, sr)
+    sp = pw.cheaptrick(audio, F0, t, sr)
+    # ap = pw.d4c(audio, F0, t, sr) for aperiodicity
+    # y = pw.synthesize(F0, sp, ap, sr)
+
     avgF0 = 0.0
     num_used = 0
     for i in range(F0.shape[0]):
@@ -92,4 +102,11 @@ def dio_FO(audio, sr, exclude_silence=True):
             avgF0 += F0[i]
             num_used += 1
     return avgF0/num_used
+
+# Other utilities
+def gaussian(x, mu, sig):
+    if sig == 0:
+        return np.array([mu for _ in range(len(x))])
+    else: 
+        return np.exp(-(x - mu) ** 2 / (2 * sig ** 2))
 
