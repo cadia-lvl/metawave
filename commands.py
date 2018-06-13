@@ -9,43 +9,44 @@ from tqdm import tqdm
 import numpy as np
 import pylab as plt
 
-from datasets import config_paths
+from datasets import config_paths, IndexHandler
 from util import speech_rate, prep_wav, dio_F0, get_duration, naive_syllable_count, gaussian
 
-
-def run(sr, paths):
+def run(sr, paths, dataset):
     '''
         The command line runner for running a whole dataset
         meta run.
     '''
+    i_handler = IndexHandler(dataset)
     try:
         with open(paths['index'], encoding='utf-8') as f:
             outfile = open(paths['out_file'], 'w')
             # run through each line in the index file
             for line in tqdm(f, total=num_lines(paths['index'])):
-                [file_id, reader, line_id, text] = line.strip().split('\t')
+                i_handler.set_current(line)
                 token = ''
                 try:
-                    with open(os.path.join(paths['text'], file_id+'.token'), 'r') as f:
+                    with open(os.path.join(paths['text'], i_handler.get_fid() + paths['token_xtsn']), 'r') as f:
                         for line in f: token += line.lower()
                 except Exception as e:
                     print('A text from the index could not be found')
                     print('Error: %s' % e)
                     sys.exit()
                 try: 
-                    audio = prep_wav(os.path.join(paths['wavs'], file_id+'.wav'), sr)
+                    audio = prep_wav(os.path.join(paths['wavs'], i_handler.get_fid()+'.wav'), sr)
                 except Exception as e:
                     print('An audio file from the index could not be found')
                     print('Error: %s' % e)
                     sys.exit()
                 spr = speech_rate(audio, token)
                 F0 = dio_F0(audio, sr, exclude_silence=True)
-                outfile.write(file_id+'\t'+reader+'\t %0.4f \t %0.4f \n' % (spr, F0))
+                outfile.write(i_handler.get_fid()+'\t'+i_handler.get_reader()+'\t %0.4f \t %0.4f \n' % (spr, F0))
         print('Meta has finished writing and is available at ', paths['out_file'])
     except Exception as e:
         print('The index file was not found')
         print('Error: %s' % e)
         sys.exit()
+
 def check(wav_path, text_path, sr):
     '''
         Do a simple (Command line style) check on a single <wav,text>

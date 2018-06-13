@@ -19,6 +19,7 @@ if __name__ == '__main__':
     parser_run.add_argument('--out_dir', default='',
         help='The absolute path for the output home directory. If not specified, it is saved to'+ 
         ' the base directory.')
+    parser_run.add_argument('--speeker_limit', default=None, help='A maximum of samples per speaker.')
 
     # Running a meta run on a custom dataset
     parser_run = subparsers.add_parser('custom_run', help='Initial run for a custom dataset')
@@ -52,7 +53,17 @@ if __name__ == '__main__':
         help='Absolute path to the respective token file')
     parser_check.add_argument('--sample_rate', default=22000,
         help='Sample rate of .wav (default=22000)')
-    
+
+    # Running a gen_index
+    parser_index = subparsers.add_parser('gen_index', help='Create an index for an index-less dataset')
+    parser_run.add_argument('--wav_dir', required=True,
+        help='The absolute path to the wav directory of the dataset')
+    parser_run.add_argument('--text_dir', required=True,
+        help='The absolute path to the text directory of the dataset')    
+    parser_run.add_argument('--out_dir', required=True,
+        help='Absolute path to the output directory for the index.')
+    parser_run.add_argument('--name_reg', required=False,
+        help='Re for file names, ex: {reader}_{id} or {id}-{reader} See readme.')
     args = parser.parse_args()
     
     if args.command == 'run':
@@ -64,7 +75,7 @@ if __name__ == '__main__':
             choice = input('This will overwrite any previous files at that lociation. Continue [(y), n] ? ')
         if choice == '' or choice == 'y':
             print('Starting the info run')
-            run(int(args.sample_rate), paths)
+            run(int(args.sample_rate), paths, args.dataset)
             choice = None
             while choice not in ['y', 'n', '']:
                 choice = input('Do you want to write a summary as well [(y), n] ? ')
@@ -87,7 +98,7 @@ if __name__ == '__main__':
             choice = input('This will overwrite any previous files at that lociation. Continue [(y), n] ? ')
         if choice == '' or choice == 'y':
             print('Starting the info run')
-            run(int(args.sample_rate), paths)
+            run(int(args.sample_rate), paths, None)
             choice = None
             while choice not in ['y', 'n', '']:
                 choice = input('Do you want to write a summary as well [(y), n] ? ')
