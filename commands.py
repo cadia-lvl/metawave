@@ -14,12 +14,17 @@ from utils.index import IndexHandler, ReverseIndexHandler
 from utils.audio import speech_rate, prep_wav, dio_F0, get_duration, naive_syllable_count
 from utils.misc import gaussian
 
-def run(sr, paths, dataset):
+def run(sr, paths, dataset, **kwargs):
     '''
         The command line runner for running a whole dataset
         meta run.
     '''
-    i_handler = IndexHandler(dataset)
+    i_handler = IndexHandler(dataset, kwargs['ind'])
+    if 'token_xtsn' in paths:
+        # using a known dataset
+        i_handler.set_token_extension(paths['token_xtsn'])
+    else:
+        i_handler.set_token_extension(kwargs['token_xtsn']) 
     try:
         with open(paths['index'], encoding='utf-8') as f:
             outfile = open(paths['out_file'], 'w')
@@ -28,21 +33,21 @@ def run(sr, paths, dataset):
                 i_handler.set_current(line)
                 token = ''
                 try:
-                    with open(os.path.join(paths['text'], i_handler.get_fid() + paths['token_xtsn']), 'r') as f:
+                    with open(os.path.join(paths['text'], i_handler.get_token_fid()), 'r') as f:
                         for line in f: token += line.lower()
                 except Exception as e:
                     print('A text from the index could not be found')
                     print('Error: %s' % e)
                     sys.exit()
                 try: 
-                    audio = prep_wav(os.path.join(paths['wavs'], i_handler.get_fid()+'.wav'), sr)
+                    audio = prep_wav(os.path.join(paths['wavs'], i_handler.get_audio_fid()), sr)
                 except Exception as e:
                     print('An audio file from the index could not be found')
                     print('Error: %s' % e)
                     sys.exit()
                 spr = speech_rate(audio, token)
                 F0 = dio_F0(audio, sr, exclude_silence=True)
-                outfile.write(i_handler.get_fid()+'\t'+i_handler.get_reader()+'\t %0.4f \t %0.4f \n' % (spr, F0))
+                outfile.write(i_handler.get_token_fid()+'\t'+i_handler.get_reader()+'\t %0.4f \t %0.4f \n' % (spr, F0))
         print('Meta has finished writing and is available at ', paths['out_file'])
     except Exception as e:
         print('The index file was not found')

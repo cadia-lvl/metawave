@@ -1,5 +1,5 @@
 # Metawave
-Metawave is a command line tool for generating speeker meta information from TTS datasets. This tool can be used for analyzing and comparing speekers in multi-speeker TTS datasets. Metawave can generate a list of outliers in the dataset that are potentially better left out in TTS training.
+Metawave is a command line tool for generating speeker meta information from TTS datasets. This tool can be used for analyzing and comparing speekers in multi-speeker TTS datasets. Metawave can generate a list of outliers in the dataset that are potentially better left out in TTS training. Metawave only supports .wav for the audio but should work with any regular file type for text tokens.
 
 ## Installing
 Metawave is a python 3.6 application and to run it, all dependencies need to be installed first via `pip install -r requirements.txt`
@@ -30,8 +30,8 @@ where the first 3 numbers are an id for the reader and the last 3 are a file id 
 
 Also note that the file extension, i.e. the `.txt` in `token.txt`, should not be included.
 
-## Issues and future work
-Since the directory structure of each dataset can be different, the only supported datasets are `TTS_icelandic_Google_m` and `ivona_speech_data`. However, for unsupported datasets, you can run metawave by supplying `--wav_dir`, `--text_dir` and `--index_path` to the `--custom_run` command. For this to work, a `line_index.tsv` where each line has `<text_fname> \t <audio_fname> \t <speeker_id>` has to exist at `index_path`.
+## Custom datasets
+Since the directory structure of each dataset can be different, the only supported datasets are `TTS_icelandic_Google_m` and `ivona_speech_data`. However, for unsupported datasets, you can run metawave by supplying `--wav_dir`, `--text_dir` and `--index_path` to the `--custom_run` command. For this to work, a line index file has to be supplied and at least `--wav_ind` and `--txt_ind` which are the indices of audio filenames and text token filenames in each line respectively. So if a line in an index file is `<text_fname> \t <audio_fname> \t <reader_id>` the suggested arguments would be `--txt_ind 0 --wav_ind 1 --reader_ind 2`.
 
 
 ## Using Ivona
