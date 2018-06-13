@@ -1,8 +1,9 @@
 import argparse
 import os
 
-from datasets import config_paths, config_custom_paths
-from commands import write_summary, run, check
+from utils.datasets import config_paths, config_custom_paths
+from utils.index import paths_for_index
+from commands import write_summary, run, check, gen_index
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -22,16 +23,16 @@ if __name__ == '__main__':
     parser_run.add_argument('--speeker_limit', default=None, help='A maximum of samples per speaker.')
 
     # Running a meta run on a custom dataset
-    parser_run = subparsers.add_parser('custom_run', help='Initial run for a custom dataset')
-    parser_run.add_argument('--sample_rate', default=22000,
+    parser_crun = subparsers.add_parser('custom_run', help='Initial run for a custom dataset')
+    parser_crun.add_argument('--sample_rate', default=22000,
         help='Sample rate of .wav (default=22000)')
-    parser_run.add_argument('--wav_dir', required=True,
+    parser_crun.add_argument('--wav_dir', required=True,
         help='The absolute path to the wav directory of the dataset')
-    parser_run.add_argument('--text_dir', required=True,
+    parser_crun.add_argument('--text_dir', required=True,
         help='The absolute path to the text directory of the dataset')
-    parser_run.add_argument('--index_path', required=True,
+    parser_crun.add_argument('--index_path', required=True,
         help='The absolute path to the index file of the dataset')
-    parser_run.add_argument('--out_dir', default='',
+    parser_crun.add_argument('--out_dir', default='',
         help='The absolute path for the output home directory. If not specified, it is saved to'+ 
         ' the base directory.')
     
@@ -56,14 +57,14 @@ if __name__ == '__main__':
 
     # Running a gen_index
     parser_index = subparsers.add_parser('gen_index', help='Create an index for an index-less dataset')
-    parser_run.add_argument('--wav_dir', required=True,
+    parser_index.add_argument('--wav_dir', required=True,
         help='The absolute path to the wav directory of the dataset')
-    parser_run.add_argument('--text_dir', required=True,
+    parser_index.add_argument('--text_dir', required=True,
         help='The absolute path to the text directory of the dataset')    
-    parser_run.add_argument('--out_dir', required=True,
+    parser_index.add_argument('--out_dir', required=True,
         help='Absolute path to the output directory for the index.')
-    parser_run.add_argument('--name_reg', required=False,
-        help='Re for file names, ex: {reader}_{id} or {id}-{reader} See readme.')
+    parser_index.add_argument('--name_reg', required=False, default='',
+        help='Re for file names, ex: .*_r_i or i-r. Note: no file extension. See readme.')
     args = parser.parse_args()
     
     if args.command == 'run':
@@ -115,7 +116,7 @@ if __name__ == '__main__':
     
     elif args.command == 'summary':
         summary_dir = os.path.join(args.out_path, 'meta_summary')
-        print('A new summary directory will be added here', summary_dir)
+        print('A new summary directory will be added to: ', summary_dir)
         choice = None
         while choice not in ['y', 'n', '']:
             choice = input('This will overwrite any previous metafiles in that directory. Continue [(y), n] ? ')
@@ -127,3 +128,15 @@ if __name__ == '__main__':
 
     elif args.command == 'check':
         check(args.wav_path, args.text_path, int(args.sample_rate))
+
+    elif args.command == 'gen_index':
+        paths = paths_for_index(args.wav_dir, args.text_dir, args.out_dir)
+        print('A new line index will be added at: ', paths['out_file'])
+        choice = None
+        while choice not in ['y', 'n', '']:
+            choice = input('This will overwrite any previous indexfile at that location. Continue [(y), n] ? ')
+        if choice == '' or choice == 'y':
+            print('Starting index generation')
+            gen_index(paths, args.name_reg)
+        else:
+            print('Quitting')

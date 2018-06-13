@@ -9,8 +9,10 @@ from tqdm import tqdm
 import numpy as np
 import pylab as plt
 
-from datasets import config_paths, IndexHandler
-from util import speech_rate, prep_wav, dio_F0, get_duration, naive_syllable_count, gaussian
+from utils.datasets import config_paths
+from utils.index import IndexHandler, ReverseIndexHandler
+from utils.audio import speech_rate, prep_wav, dio_F0, get_duration, naive_syllable_count
+from utils.misc import gaussian
 
 def run(sr, paths, dataset):
     '''
@@ -47,6 +49,19 @@ def run(sr, paths, dataset):
         print('Error: %s' % e)
         sys.exit()
 
+def gen_index(paths, name_reg):
+    # iterate all text tokens to get filenames
+    try:
+        outfile = open(paths['out_file'], 'w')
+    except Exception as e:
+        print('Could not complete path to out_file. Path likely wrong')
+        print('Error: %s' % e)
+        sys.exit()    
+    handler = ReverseIndexHandler(name_reg)
+    for fn in os.listdir(paths['text']):
+        outfile.write('%s \n' % handler.get_line(fn))
+    print('Index file is ready at: ', paths['out_file'])
+
 def check(wav_path, text_path, sr):
     '''
         Do a simple (Command line style) check on a single <wav,text>
@@ -66,7 +81,6 @@ def check(wav_path, text_path, sr):
     print('Speech rate: %0.4f' % spr)
     print('F0:          %0.4f' % F0)
     print('------------------------------------')
-
 
 def write_summary(meta_path, summary_dir, outlier_threshold):
     '''
@@ -232,6 +246,3 @@ def num_lines(file_path):
     while buf.readline():
         count += 1
     return count
-
-
-       

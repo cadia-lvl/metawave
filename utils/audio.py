@@ -1,5 +1,4 @@
 import re
-
 import crepe
 import librosa
 import numpy as np
@@ -102,11 +101,3 @@ def dio_F0(audio, sr, exclude_silence=True):
             avgF0 += F0[i]
             num_used += 1
     return avgF0/num_used
-
-# Other utilities
-def gaussian(x, mu, sig):
-    if sig == 0:
-        return np.array([mu for _ in range(len(x))])
-    else: 
-        return np.exp(-(x - mu) ** 2 / (2 * sig ** 2))
-
