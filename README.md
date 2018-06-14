@@ -1,5 +1,5 @@
 # Metawave
-Metawave is a command line tool for generating speeker meta information from TTS datasets. This tool can be used for analyzing and comparing speekers in multi-speeker TTS datasets. Metawave can generate a list of outliers in the dataset that are potentially better left out in TTS training. Metawave only supports .wav for the audio but should work with any regular file type for text tokens.
+Metawave is a command line tool for generating reader meta information from TTS datasets. This tool can be used for analyzing and comparing reader in multi-reader TTS datasets. Metawave can generate a list of outliers in the dataset that are potentially better left out in TTS training. Metawave only supports .wav for the audio but should work with any regular file type for text tokens.
 
 ## Installing
 Metawave is a python 3.6 application and to run it, all dependencies need to be installed first via `pip install -r requirements.txt`

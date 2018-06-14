@@ -20,16 +20,22 @@ def run(sr, paths, dataset, **kwargs):
         meta run.
     '''
     i_handler = IndexHandler(dataset, kwargs['ind'])
+    num_samples = kwargs['num_samples']
     if 'token_xtsn' in paths:
         # using a known dataset
         i_handler.set_token_extension(paths['token_xtsn'])
     else:
         i_handler.set_token_extension(kwargs['token_xtsn']) 
     try:
+        count = 0 
         with open(paths['index'], encoding='utf-8') as f:
             outfile = open(paths['out_file'], 'w')
             # run through each line in the index file
-            for line in tqdm(f, total=num_lines(paths['index'])):
+            if num_samples is not None:
+                total = num_samples
+            else:
+                total = num_lines(paths['index'])
+            for line in tqdm(f, total=total):
                 i_handler.set_current(line)
                 token = ''
                 try:
@@ -48,6 +54,10 @@ def run(sr, paths, dataset, **kwargs):
                 spr = speech_rate(audio, token)
                 F0 = dio_F0(audio, sr, exclude_silence=True)
                 outfile.write(i_handler.get_token_fid()+'\t'+i_handler.get_reader()+'\t %0.4f \t %0.4f \n' % (spr, F0))
+                if num_samples is not None and count + 1 >= num_samples:
+                    print('Stopping because num_samples was set to ', num_samples)
+                    break
+                count += 1
         print('Meta has finished writing and is available at ', paths['out_file'])
     except Exception as e:
         print('The index file was not found')
@@ -188,7 +198,7 @@ def write_summary(meta_path, summary_dir, outlier_threshold):
         fig.suptitle('Info for %s' %reader)
         plt.savefig(os.path.join(reader_dir, '%s-info' % reader.replace('.','')))
     
-    # find outliers on per-speeker basis
+    # find outliers on per-reader basis
     outlier_file = open(os.path.join(summary_dir, 'outliers.log'), 'w')
     outlier_index = open(os.path.join(summary_dir, 'outlier_index.txt'), 'w')
     outlier_info = defaultdict(list)

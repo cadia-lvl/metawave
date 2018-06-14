@@ -20,7 +20,7 @@ if __name__ == '__main__':
     parser_run.add_argument('--out_dir', default='',
         help='The absolute path for the output root directory. If not specified, it is saved to'+ 
         ' the base directory.')
-    parser_run.add_argument('--speeker_limit', default=None, help='A maximum of samples per speaker.')
+    parser_run.add_argument('--num_samples', default=None, help='If not indicated, all samples are used')
 
     # Running a meta run on a custom dataset
     parser_crun = subparsers.add_parser('custom_run', help='Initial run for a custom dataset')
@@ -42,6 +42,8 @@ if __name__ == '__main__':
         help='Index of reader in line index')
     parser_crun.add_argument('--txt_ind', default='0',
         help='Index of reader in line index')
+    parser_crun.add_argument('--num_samples', default=None, help='If not indicated, all samples are used')
+
 
     # Running summary
     parser_summary = subparsers.add_parser('summary', help='Generate a summary for a dataset.')
@@ -83,7 +85,10 @@ if __name__ == '__main__':
             choice = input('This will overwrite any previous files at that lociation. Continue [(y), n] ? ')
         if choice == '' or choice == 'y':
             print('Starting the info run')
-            run(int(args.sample_rate), paths, args.dataset, ind=None)
+            num_samples = args.num_samples
+            if num_samples is not None:
+                num_samples = int(num_samples)
+            run(int(args.sample_rate), paths, args.dataset, ind=None, num_samples=num_samples)
             choice = None
             while choice not in ['y', 'n', '']:
                 choice = input('Do you want to write a summary as well [(y), n] ? ')
@@ -112,7 +117,10 @@ if __name__ == '__main__':
             choice = input('This will overwrite any previous files at that lociation. Continue [(y), n] ? ')
         if choice == '' or choice == 'y':
             print('Starting the info run')
-            run(int(args.sample_rate), paths, None, ind=ind, token_xtsn=args.token_xtsn)
+            num_samples = args.num_samples
+            if num_samples is not None:
+                num_samples = int(num_samples)
+            run(int(args.sample_rate), paths, None, ind=ind, token_xtsn=args.token_xtsn, num_samples=num_samples)
             choice = None
             while choice not in ['y', 'n', '']:
                 choice = input('Do you want to write a summary as well [(y), n] ? ')
