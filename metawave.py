@@ -3,7 +3,7 @@ import os
 
 from utils.datasets import config_paths, config_custom_paths
 from utils.index import paths_for_index
-from commands import write_summary, run, check, gen_index
+from commands import write_summary, run, check, gen_index, outliers
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -44,7 +44,6 @@ if __name__ == '__main__':
         help='Index of reader in line index')
     parser_crun.add_argument('--num_samples', default=None, help='If not indicated, all samples are used')
 
-
     # Running summary
     parser_summary = subparsers.add_parser('summary', help='Generate a summary for a dataset.')
     parser_summary.add_argument('--meta_path', required=True,
@@ -74,8 +73,20 @@ if __name__ == '__main__':
         help='Absolute path to the output directory for the index.')
     parser_index.add_argument('--name_reg', required=False, default='',
         help='Re for file names, ex: .*_r_i or i-r. Note: no file extension. See readme.')
+
+    # Running outliers
+    parser_outliers = subparsers.add_parser('outliers', help='Generate a file index of outliers as well as'+\
+        ' other outlier information')
+    parser_outliers.add_argument('--meta_path', required=True,
+        help='The absolute path to the meta file of the dataset')
+    parser_outliers.add_argument('--out_path', required=True,
+        help='The absolute path to the base directory of the output files')
+    parser_outliers.add_argument('--outlier_threshold', default=3,
+        help='The number of standard deviations needed to determine if a sample'+
+        'is an outlier. (default=3)')
+
+
     args = parser.parse_args()
-    
     if args.command == 'run':
         # configure paths based on chosen dataset
         paths = config_paths(args.dataset, args.base_dir, args.out_dir)
@@ -161,3 +172,15 @@ if __name__ == '__main__':
             gen_index(paths, args.name_reg)
         else:
             print('Quitting')
+    
+    elif args.command == 'outliers':
+        print('Outlier files will be generated at ', args.out_path)
+        choice = None
+        while choice not in ['y', 'n', '']:
+            choice = input('Continue [(y), n] ? ')
+        if choice == '' or choice == 'y':
+            print('Starting outlier generation')
+            outliers(args.meta_path, args.out_path, int(args.outlier_threshold))
+        else:
+            print('Quitting')
+

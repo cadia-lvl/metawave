@@ -5,13 +5,14 @@ Metawave is a command line tool for generating reader meta information from TTS 
 Metawave is a python 3.6 application and to run it, all dependencies need to be installed first via `pip install -r requirements.txt`
 
 ## Usage
-All running of the app is through `metawave.py` and it has 3 modes:
+All running of the app is through `metawave.py`. To get more information about how to run metwave you can always use `-h` to get information about how to run. Metwave has 6 available commands:
 
 1. `./metawave.py --run` : For gathering the initial meta-information and optionally generates a summary as well. (Requires an index file)
 2. `./metawave.py --custom_run` : Can be used for unsupported datasets. (Requires an index file)
 3. `./metawave.py --summary` : Can only be called after doing a `--run`. This summary generates information about each speaker and a list of outliers amongst other things.
 4. `./metawave.py --check` : A handy tool to get quick information ona single `<text, audio>` pair.
-5. `./metawave.py --gen_index` : For generating a line index file similar to the one in the google dataset for example.
+5. `./metawave.py --outliers` : Generates an outlier index for a given dataset meta file.
+6. `./metawave.py --gen_index` : For generating a line index file similar to the one in the google dataset for example.
 
 Each mode has some required parameters which can be listed via `./metawave --<mode> -h`
 

@@ -101,3 +101,10 @@ def dio_F0(audio, sr, exclude_silence=True):
             avgF0 += F0[i]
             num_used += 1
     return avgF0/num_used
+
+def aperiodicity(audio, sr):
+    _F0, t = pw.dio(audio, sr)
+    F0 = pw.stonemask(audio, _F0, t, sr)
+    sp = pw.cheaptrick(audio, F0, t, sr)
+    ap = pw.d4c(audio, F0, t, sr)
+    return ap

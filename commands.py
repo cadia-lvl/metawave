@@ -113,10 +113,8 @@ def write_summary(meta_path, summary_dir, outlier_threshold):
     id_dict = defaultdict(list)
     total_F0 = []
     total_spr = []
-    num_samples = 0
     with open(meta_path, 'r') as meta:
         for line in meta:
-            num_samples += 1
             [file_id, reader, spr, f0] = line.split('\t')
             spr_dict[reader].append(float(spr))
             id_dict[reader].append(file_id)
@@ -253,6 +251,61 @@ def write_summary(meta_path, summary_dir, outlier_threshold):
         for reader, vals in outlier_info.items():
             out_file.write('%s : %d \n' %(reader, len(vals)))
     print('Finished, the summary is now available at ', summary_dir)
+
+def outliers(meta_path, out_path, thresh):
+    outlier_file = open(os.path.join(out_path, 'outliers.log'), 'w')
+    outlier_index = open(os.path.join(out_path, 'outlier_index.txt'), 'w')
+    F0_dict = defaultdict(list)
+    spr_dict = defaultdict(list)
+    result_dict = defaultdict(dict)
+    id_dict = defaultdict(list)
+    total_F0 = []
+    total_spr = []
+    with open(meta_path, 'r') as meta:
+        for line in meta:
+            [file_id, reader, spr, f0] = line.split('\t')
+            spr_dict[reader].append(float(spr))
+            id_dict[reader].append(file_id)
+            total_spr.append(spr_dict[reader][-1])
+            F0_dict[reader].append(float(f0))
+            total_F0.append(F0_dict[reader][-1])
+            result_dict[reader] = defaultdict(dict)
+    raw_dict = {'f0': F0_dict, 'spr': spr_dict}
+    num_speakers = len(F0_dict)
+    for key, obj in raw_dict.items():
+        for reader, vals in obj.items():
+            result_dict[reader][key]['avg'] = np.average(vals)
+            result_dict[reader][key]['stddev'] = np.std(vals)
+            result_dict[reader][key]['var']= np.var(vals)
+    
+    # add the dataset total to the 'total' reader
+    result_dict['all'] = defaultdict(dict)
+    for key, obj in {'f0':total_F0, 'spr':total_spr}.items():
+        result_dict['all'][key]['avg'] = np.average(obj)
+        result_dict['all'][key]['stddev'] = np.std(obj)
+        result_dict['all'][key]['var'] = np.var(obj)
+    outlier_info = defaultdict(list)
+    num_outliers = 0
+    for reader, vals in F0_dict.items():
+        ind = 0
+        for val in vals:
+            if np.abs(val - result_dict[reader]['f0']['avg']) > result_dict[reader]['f0']['stddev'] * thresh:
+                num_outliers += 1
+                diff = np.abs(val - result_dict[reader]['f0']['avg'])
+                outlier_info[reader].append('%s. F0 is %0.3f and is %0.3f away from the average: %0.3f' 
+                    % (id_dict[reader][ind], val, diff, result_dict[reader]['f0']['avg']))
+                outlier_index.write('%s \n' % id_dict[reader][ind])
+            ind += 1
+    for reader, vals in spr_dict.items():
+        ind = 0
+        for val in vals:
+            if np.abs(val - result_dict[reader]['spr']['avg']) > result_dict[reader]['spr']['stddev'] * thresh:
+                num_outliers += 1
+                diff = np.abs(val - result_dict[reader]['spr']['avg'])
+                outlier_info[reader].append('%s. SR is %0.3f and is %0.3f away from the average: %0.3f' 
+                    % (id_dict[reader][ind], val, diff, result_dict[reader]['spr']['avg']))
+                outlier_index.write('%s \n' % id_dict[reader][ind])
+            ind += 1
 
 def num_lines(file_path):
     fp = open(file_path, "r+")
