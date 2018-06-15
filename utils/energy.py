@@ -1,6 +1,7 @@
-from audio import prep_wav, aperiodicity
 import matplotlib.pyplot as plt
 import numpy as np
+
+from audio import aperiodicity, prep_wav
 
 if __name__ == '__main__':
     ap = '/home/atli/Work/taco/datasets/mini/ismData/wavs/ism_1140_0024314995.wav'

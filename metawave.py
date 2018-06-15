@@ -1,9 +1,9 @@
 import argparse
 import os
+from commands import check, gen_index, outliers, run, write_summary
 
-from utils.datasets import config_paths, config_custom_paths
+from utils.datasets import config_custom_paths, config_paths
 from utils.index import paths_for_index
-from commands import write_summary, run, check, gen_index, outliers
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -183,4 +183,3 @@ if __name__ == '__main__':
             outliers(args.meta_path, args.out_path, int(args.outlier_threshold))
         else:
             print('Quitting')
-

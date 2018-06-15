@@ -1,18 +1,20 @@
 import csv
-import re
-import os
 import mmap
+import os
+import re
 import sys
 from collections import defaultdict
 
-from tqdm import tqdm
 import numpy as np
 import pylab as plt
+from tqdm import tqdm
 
+from utils.audio import (dio_F0, get_duration, naive_syllable_count, prep_wav,
+                         speech_rate)
 from utils.datasets import config_paths
 from utils.index import IndexHandler, ReverseIndexHandler
-from utils.audio import speech_rate, prep_wav, dio_F0, get_duration, naive_syllable_count
 from utils.misc import gaussian
+
 
 def run(sr, paths, dataset, **kwargs):
     '''
@@ -113,8 +115,10 @@ def write_summary(meta_path, summary_dir, outlier_threshold):
     id_dict = defaultdict(list)
     total_F0 = []
     total_spr = []
+    num_samples = 0
     with open(meta_path, 'r') as meta:
         for line in meta:
+            num_samples += 1
             [file_id, reader, spr, f0] = line.split('\t')
             spr_dict[reader].append(float(spr))
             id_dict[reader].append(file_id)
@@ -271,7 +275,6 @@ def outliers(meta_path, out_path, thresh):
             total_F0.append(F0_dict[reader][-1])
             result_dict[reader] = defaultdict(dict)
     raw_dict = {'f0': F0_dict, 'spr': spr_dict}
-    num_speakers = len(F0_dict)
     for key, obj in raw_dict.items():
         for reader, vals in obj.items():
             result_dict[reader][key]['avg'] = np.average(vals)
@@ -306,6 +309,12 @@ def outliers(meta_path, out_path, thresh):
                     % (id_dict[reader][ind], val, diff, result_dict[reader]['spr']['avg']))
                 outlier_index.write('%s \n' % id_dict[reader][ind])
             ind += 1
+    # write out outlier info reader wise:
+    for reader, vals in outlier_info.items():
+        outlier_file.write('-------------------------------------------\n')
+        outlier_file.write('Outliers for %s \n' % reader)
+        for val in vals:
+            outlier_file.write('%s \n' % val)
 
 def num_lines(file_path):
     fp = open(file_path, "r+")
