@@ -34,6 +34,8 @@ Also note that the file extension, i.e. the `.txt` in `token.txt`, should not be
 ## Custom datasets
 Since the directory structure of each dataset can be different, the only supported datasets are `TTS_icelandic_Google_m` and `ivona_speech_data`. However, for unsupported datasets, you can run metawave by supplying `--wav_dir`, `--text_dir` and `--index_path` to the `--custom_run` command. For this to work, a line index file has to be supplied and at least `--wav_ind` and `--txt_ind` which are the indices of audio filenames and text token filenames in each line respectively. So if a line in an index file is `<text_fname> \t <audio_fname> \t <reader_id>` the suggested arguments would be `--txt_ind 0 --wav_ind 1 --reader_ind 2`.
 
-
-## Using Ivona
+**Using Ivona**
 To use Ivona as a known dataset, an index file, `line_index.tsv` has to be generated and available in the root directory of the dataset. Each line has `<text_fname> \t <audio_fname> \t <reader_id>`. In this case, the reader id references the 3 different sets in Ivona. Otherwise an index file can be generated anyway is needed and run using `custom_run`
+
+## Metawave as a package
+Metawave comes with some nice utils that can be directly imported. to use metwave as a package install it via pip by cloning this repository, and inside the base metawave directory do `pip install .`
