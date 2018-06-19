@@ -213,7 +213,7 @@ def write_summary(meta_path, summary_dir, outlier_threshold):
                 diff = np.abs(val - result_dict[reader]['f0']['avg'])
                 outlier_info[reader].append('%s. F0 is %0.3f and is %0.3f away from the average: %0.3f' 
                     % (id_dict[reader][ind], val, diff, result_dict[reader]['f0']['avg']))
-                outlier_index.write('%s \n' % id_dict[reader][ind])
+                outlier_index.write('%s\n' % id_dict[reader][ind])
             ind += 1
     
     for reader, vals in spr_dict.items():
@@ -224,7 +224,7 @@ def write_summary(meta_path, summary_dir, outlier_threshold):
                 diff = np.abs(val - result_dict[reader]['spr']['avg'])
                 outlier_info[reader].append('%s. SR is %0.3f and is %0.3f away from the average: %0.3f' 
                     % (id_dict[reader][ind], val, diff, result_dict[reader]['spr']['avg']))
-                outlier_index.write('%s \n' % id_dict[reader][ind])
+                outlier_index.write('%s\n' % id_dict[reader][ind])
             ind += 1
     
     # write out outlier info reader wise:
@@ -307,7 +307,7 @@ def outliers(meta_path, out_path, thresh):
                 diff = np.abs(val - result_dict[reader]['spr']['avg'])
                 outlier_info[reader].append('%s. SR is %0.3f and is %0.3f away from the average: %0.3f' 
                     % (id_dict[reader][ind], val, diff, result_dict[reader]['spr']['avg']))
-                outlier_index.write('%s \n' % id_dict[reader][ind])
+                outlier_index.write('%s\n' % id_dict[reader][ind])
             ind += 1
     # write out outlier info reader wise:
     for reader, vals in outlier_info.items():
