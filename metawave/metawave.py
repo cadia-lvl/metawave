@@ -5,7 +5,8 @@ from .commands import check, gen_index, outliers, run, write_summary
 from .utils.datasets import config_custom_paths, config_paths
 from .utils.index import paths_for_index
 
-if __name__ == '__main__':
+def main():
+
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest='command', help='Command to run')
     subparsers.required = True
@@ -36,11 +37,11 @@ if __name__ == '__main__':
         help='The absolute path for the output root directory.')
     parser_crun.add_argument('--token_xtsn', required=True, default='.token',
         help='The file extension of text tokens, e.g. ".txt"')
-    parser_crun.add_argument('--reader_ind',
+    parser_crun.add_argument('--reader_ind', default=None,
         help='Index of reader in line index')
-    parser_crun.add_argument('--wav_ind', default='1',
+    parser_crun.add_argument('--wav_ind', default='1', required=True,
         help='Index of reader in line index')
-    parser_crun.add_argument('--txt_ind', default='0',
+    parser_crun.add_argument('--txt_ind', default='0', required=True,
         help='Index of reader in line index')
     parser_crun.add_argument('--num_samples', default=None, help='If not indicated, all samples are used')
 
@@ -118,10 +119,10 @@ if __name__ == '__main__':
         paths = config_custom_paths(args.wav_dir, args.text_dir, args.index_path, args.out_dir)
         # handle indexes
         ind = {}
-        ind['wav_ind'] = args.wav_ind
-        ind['txt_ind'] = args.txt_ind
-        if 'reader_ind' in args:
-            ind['reader_ind'] = args.reader_ind
+        ind['wav_ind'] = int(args.wav_ind)
+        ind['txt_ind'] = int(args.txt_ind)
+        if args.reader_ind is not None:
+            ind['reader_ind'] = int(args.reader_ind)
         print('A new meta file will be written at ', paths['out_file'])
         choice = None
         while choice not in ['y', 'n', '']:

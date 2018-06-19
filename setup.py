@@ -61,5 +61,8 @@ setup(name='metawave',
         'Werkzeug==0.14.1',
         'wrapt==1.10.11'
     ],
+    entry_points={
+          'console_scripts': ['metawave=metawave.metawave:main'],
+      },
     include_package_data=True,
     zip_safe=False)

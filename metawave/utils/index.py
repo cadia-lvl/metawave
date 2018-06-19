@@ -103,7 +103,6 @@ class IndexHandler:
         self._token_fid = vals[self._token_fid_indx]
         if self._reader_indx is not None:
             self._reader = vals[self._reader_indx]
-
     def get_reader(self):
         '''
             If the index of the reader is not known (e.g. if it

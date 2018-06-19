@@ -29,7 +29,7 @@ def run(sr, paths, dataset, **kwargs):
     else:
         i_handler.set_token_extension(kwargs['token_xtsn']) 
     try:
-        count = 0 
+        count = 0
         with open(paths['index'], encoding='utf-8') as f:
             outfile = open(paths['out_file'], 'w')
             # run through each line in the index file
@@ -62,7 +62,7 @@ def run(sr, paths, dataset, **kwargs):
                 count += 1
         print('Meta has finished writing and is available at ', paths['out_file'])
     except Exception as e:
-        print('The index file was not found')
+        print('Error while reading from index file.')
         print('Error: %s' % e)
         sys.exit()
 

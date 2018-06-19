@@ -2,19 +2,19 @@
 Metawave is a command line tool for generating reader meta information from TTS datasets. This tool can be used for analyzing and comparing reader in multi-reader TTS datasets. Metawave can generate a list of outliers in the dataset that are potentially better left out in TTS training. Metawave only supports .wav for the audio but should work with any regular file type for text tokens.
 
 ## Installing
-Metawave is a python 3.6 application and to run it, all dependencies need to be installed first via `pip install -r requirements.txt`
+Metawave is a python 3.6 application and to run it, all dependencies need to be installed first via `pip install -r requirements.txt`. Even better is to install metawave as a package. To use metwave as a package install it via pip by cloning this repository, and inside the base metawave directory do `pip install .`
 
 ## Usage
-All running of the app is through `metawave.py`. To get more information about how to run metwave you can always use `-h` to get information about how to run. Metwave has 6 available commands:
+All running of the app is through `metawave.py`. To get more information about how to run metwave you can always use `-h` to get information about how to run. Metwave has 6 available commands:n
 
-1. `./metawave.py --run` : For gathering the initial meta-information and optionally generates a summary as well. (Requires an index file)
-2. `./metawave.py --custom_run` : Can be used for unsupported datasets. (Requires an index file)
-3. `./metawave.py --summary` : Can only be called after doing a `--run`. This summary generates information about each speaker and a list of outliers amongst other things.
-4. `./metawave.py --check` : A handy tool to get quick information ona single `<text, audio>` pair.
-5. `./metawave.py --outliers` : Generates an outlier index for a given dataset meta file.
-6. `./metawave.py --gen_index` : For generating a line index file similar to the one in the google dataset for example.
+1. `metawave --run` : For gathering the initial meta-information and optionally generates a summary as well. (Requires an index file)
+2. `metawave --custom_run` : Can be used for unsupported datasets. (Requires an index file)
+3. `metawave --summary` : Can only be called after doing a `--run`. This summary generates information about each speaker and a list of outliers amongst other things.
+4. `metawave --check` : A handy tool to get quick information ona single `<text, audio>` pair.
+5. `metawave --outliers` : Generates an outlier index for a given dataset meta file.
+6. `metawave --gen_index` : For generating a line index file similar to the one in the google dataset for example.
 
-Each mode has some required parameters which can be listed via `./metawave --<mode> -h`
+Each mode has some required parameters which can be listed via `metawave --<mode> -h`
 
 ## Generating an index file
 If a dataset does not have an index file, one has to be created. If the reader id is encoded in the file-name, this can be specified via `--name_reg`. For example if the data has the following setup:
@@ -37,5 +37,3 @@ Since the directory structure of each dataset can be different, the only support
 **Using Ivona**
 To use Ivona as a known dataset, an index file, `line_index.tsv` has to be generated and available in the root directory of the dataset. Each line has `<text_fname> \t <audio_fname> \t <reader_id>`. In this case, the reader id references the 3 different sets in Ivona. Otherwise an index file can be generated anyway is needed and run using `custom_run`
 
-## Metawave as a package
-Metawave comes with some nice utils that can be directly imported. to use metwave as a package install it via pip by cloning this repository, and inside the base metawave directory do `pip install .`
