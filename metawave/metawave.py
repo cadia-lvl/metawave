@@ -51,9 +51,8 @@ def main():
         help='Absolute path to the meta file')
     parser_summary.add_argument('--out_path', required=True,
         help='Absolute path to the path for the output directory')
-    parser_summary.add_argument('--outlier_threshold', default=3,
-        help='The number of standard deviations needed to determine if a sample'+
-            'is an outlier. (default=3)')
+    parser_summary.add_argument('--outlier_threshold', default=0.9,
+        help='The ratio of samples to keep after removing outliers (default=0.9)')
 
     # Running a check
     parser_check = subparsers.add_parser('check', help='Get a short summary for a single <wav, text> pair')
@@ -82,9 +81,8 @@ def main():
         help='The absolute path to the meta file of the dataset')
     parser_outliers.add_argument('--out_path', required=True,
         help='The absolute path to the base directory of the output files')
-    parser_outliers.add_argument('--outlier_threshold', default=3,
-        help='The number of standard deviations needed to determine if a sample'+
-        'is an outlier. (default=3)')
+    parser_outliers.add_argument('--outlier_threshold', default=0.9,
+        help='The ratio of samples to keep after removing outliers (default=0.9)')
 
 
     args = parser.parse_args()
