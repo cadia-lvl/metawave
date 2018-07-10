@@ -79,7 +79,7 @@ class IndexHandler:
             else:
                 self._reader_indx = None
         else:
-            if dataset == 'TTS_icelandic_Google_m':
+            if dataset == 'TTS_icelandic_Google_m' or dataset == 'TTS_icelandic_Google_f':
                 self._audio_fid_indx = 0
                 self._token_fid_indx = 0
                 self._reader_indx = 1

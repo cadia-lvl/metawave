@@ -15,7 +15,7 @@ def main():
     parser_run = subparsers.add_parser('run', help='Initial run for a supported dataset')
     parser_run.add_argument('--sample_rate', default=22000,
         help='Sample rate of .wav (default=22000)')
-    parser_run.add_argument('--dataset', required=True, choices=['TTS_icelandic_Google_m', 'ivona_speech_data'])
+    parser_run.add_argument('--dataset', required=True, choices=['TTS_icelandic_Google_m', 'TTS_icelandic_Google_f', 'ivona_speech_data'])
     parser_run.add_argument('--base_dir', required=True,
         help='The absolute path to the base directory of the dataset')
     parser_run.add_argument('--out_dir', default='',
@@ -108,7 +108,7 @@ def main():
                 meta_path = paths['out_file']
                 sp = os.path.join(os.path.split(meta_path)[0], 'summary')
                 summary_path = input('Absolute path of summary (default: %s): '% sp) or sp
-                outlier_thresh = float(input('Outlier threshold (default: %d): '% 0.9) or '0.9')
+                outlier_thresh = float(input('Outlier threshold (default: %f): '% 0.9) or '0.9')
                 write_summary(meta_path, summary_path, outlier_thresh)
             else:
                 print('Quitting')

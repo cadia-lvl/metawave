@@ -11,6 +11,11 @@ def config_paths(dataset, base_dir, out_dir):
         paths['text'] = os.path.join(base_dir, 'ismData', 'tokens')
         paths['index'] = os.path.join(base_dir, 'ismData', 'line_index.tsv')
         paths['token_xtsn'] = '.token'
+    if dataset == 'TTS_icelandic_Google_f':
+        paths['wavs'] = os.path.join(base_dir, 'isfData', 'wavs')
+        paths['text'] = os.path.join(base_dir, 'isfData', 'tokens')
+        paths['index'] = os.path.join(base_dir, 'isfData', 'line_index.txt')
+        paths['token_xtsn'] = '.token'
     elif dataset == 'ivona_speech_data':
         paths['wavs'] = os.path.join(base_dir, 'Kristjan_export')
         paths['text'] = os.path.join(base_dir, 'ivona_txt')
