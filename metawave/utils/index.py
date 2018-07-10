@@ -1,7 +1,6 @@
 import re
 import os
 import sys
-from .common import GOOGLE_ID, IVONA_ID
 
 def gen_line_reg(s):
     '''
@@ -80,11 +79,11 @@ class IndexHandler:
             else:
                 self._reader_indx = None
         else:
-            if dataset == GOOGLE_ID:
+            if dataset == 'TTS_icelandic_Google_m':
                 self._audio_fid_indx = 0
                 self._token_fid_indx = 0
                 self._reader_indx = 1
-            elif dataset == IVONA_ID:
+            elif dataset == 'ivona_speech_data':
                 self._token_fid_indx = 0
                 self._audio_fid_indx = 1
                 self._reader_indx = 2

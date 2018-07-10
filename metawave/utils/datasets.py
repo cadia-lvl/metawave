@@ -1,19 +1,17 @@
 import os
 
-from .common import GOOGLE_ID, IVONA_ID
-
 def config_paths(dataset, base_dir, out_dir):
     '''
         Used for known datasets to reduce input
         arguments for user
     '''
     paths = {}
-    if dataset == GOOGLE_ID:
+    if dataset == 'TTS_icelandic_Google_m':
         paths['wavs'] = os.path.join(base_dir, 'ismData', 'wavs')
         paths['text'] = os.path.join(base_dir, 'ismData', 'tokens')
         paths['index'] = os.path.join(base_dir, 'ismData', 'line_index.tsv')
         paths['token_xtsn'] = '.token'
-    elif dataset == IVONA_ID:
+    elif dataset == 'ivona_speech_data':
         paths['wavs'] = os.path.join(base_dir, 'Kristjan_export')
         paths['text'] = os.path.join(base_dir, 'ivona_txt')
         paths['index'] = os.path.join(base_dir, 'line_index.tsv')

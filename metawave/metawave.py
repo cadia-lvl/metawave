@@ -108,7 +108,7 @@ def main():
                 meta_path = paths['out_file']
                 sp = os.path.join(os.path.split(meta_path)[0], 'summary')
                 summary_path = input('Absolute path of summary (default: %s): '% sp) or sp
-                outlier_thresh = int(input('Outlier threshold (default: %d): '% 3) or '3')
+                outlier_thresh = float(input('Outlier threshold (default: %d): '% 0.9) or '0.9')
                 write_summary(meta_path, summary_path, outlier_thresh)
             else:
                 print('Quitting')
@@ -140,7 +140,7 @@ def main():
                 meta_path = paths['out_file']
                 sp = os.path.join(os.path.split(meta_path)[0], 'summary')
                 summary_path = input('Absolute path of summary (default: %s): '% sp) or sp
-                outlier_thresh = int(input('Outlier threshold (default: %d): '% 3) or '3')
+                outlier_thresh = float(input('Outlier threshold (default: %f): '% 0.9) or '0.9')
                 write_summary(meta_path, summary_path, outlier_thresh)
             else:
                 print('Quitting')
@@ -155,7 +155,7 @@ def main():
             choice = input('This will overwrite any previous metafiles in that directory. Continue [(y), n] ? ')
         if choice == '' or choice == 'y':
             print('Starting the summary run')
-            write_summary(args.meta_path, summary_dir, int(args.outlier_threshold))
+            write_summary(args.meta_path, summary_dir, float(args.outlier_threshold))
         else:
             print('Quitting')
 
