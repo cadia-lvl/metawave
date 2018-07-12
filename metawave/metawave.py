@@ -1,6 +1,8 @@
 import argparse
 import os
 from .commands import check, gen_index, outliers, run, write_summary
+from .search import SearchHandler
+
 
 from .utils.datasets import config_custom_paths, config_paths
 from .utils.index import paths_for_index
@@ -11,6 +13,11 @@ def main():
     subparsers = parser.add_subparsers(dest='command', help='Command to run')
     subparsers.required = True
     
+    # Running a search in tokens
+    parser_search = subparsers.add_parser('search', help='Search for utterance ID for a given term')
+    parser_search.add_argument('--text_dir', help='Directory of the text tokens of a dataset')
+    parser_search.add_argument('term', help='Search term')
+
     # Running whole meta run
     parser_run = subparsers.add_parser('run', help='Initial run for a supported dataset')
     parser_run.add_argument('--sample_rate', default=22000,
@@ -86,7 +93,13 @@ def main():
 
 
     args = parser.parse_args()
-    if args.command == 'run':
+
+    if args.command == 'search':
+        sh = SearchHandler(args.text_dir)
+        results = sh.search(args.term)
+        print(results)
+
+    elif args.command == 'run':
         # configure paths based on chosen dataset
         paths = config_paths(args.dataset, args.base_dir, args.out_dir)
         print('A new meta file will be written at ', paths['out_file'])
