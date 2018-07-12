@@ -13,6 +13,8 @@ All running of the app is through `metawave.py`. To get more information about h
 4. `metawave --check` : A handy tool to get quick information ona single `<text, audio>` pair.
 5. `metawave --outliers` : Generates an outlier index for a given dataset meta file.
 6. `metawave --gen_index` : For generating a line index file similar to the one in the google dataset for example.
+7. `metawave --search`: For searching for terms in text tokens.
+
 
 Each mode has some required parameters which can be listed via `metawave --<mode> -h`
 
