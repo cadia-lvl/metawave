@@ -58,7 +58,7 @@ setup(name='metawave',
         'tensorboard==1.8.0',
         'termcolor==1.1.0',
         'tqdm==4.23.4',
-        'Werkzeug==0.14.1',
+        'Werkzeug==0.15.5',
         'wrapt==1.10.11'
     ],
     entry_points={
